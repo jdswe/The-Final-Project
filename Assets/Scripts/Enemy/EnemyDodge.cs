@@ -20,9 +20,14 @@ public class EnemyDodge : EnemyBase
         DetectThreats(); // ahora escanea cada frame
     }
 
-    private void DetectThreats()
+    protected override void OnInterrupted()
     {
-        if (Time.time < lastDodgeTime + dodgeCooldown || isDodging) return;
+        isDodging = false;
+    }
+
+    protected void DetectThreats()
+    {
+        if (AIBlocked() || Time.time < lastDodgeTime + dodgeCooldown || isDodging) return;
 
 
         Collider[] threats = Physics.OverlapSphere(transform.position, threatDetectionRadius, threatLayer);
@@ -68,7 +73,7 @@ public class EnemyDodge : EnemyBase
 
     protected void Dodge()
     {
-        if (isDodging) return;
+        if (isDodging || AIBlocked() || enemyRb == null) return;
 
         isDodging = true;
 
@@ -78,11 +83,13 @@ public class EnemyDodge : EnemyBase
 
         enemyRb.AddForce(dodgeDir * dodgeForce, ForceMode.Impulse);
 
-        animator.SetBool("isLeft", dodgeLeft);
-        animator.SetTrigger("dodge");
-        animator.Play(dodgeLeft ? "monster dodge left" : "monster dodge right");
+        SetAnimBool("isLeft", dodgeLeft);
+        if (animator != null)
+        {
+            if (HasParameter("dodge", AnimatorControllerParameterType.Trigger)) animator.SetTrigger("dodge");
+            animator.Play(dodgeLeft ? "monster dodge left" : "monster dodge right");
+        }
 
-        Debug.Log("🌀 Esquivando hacia " + (dodgeLeft ? "izquierda" : "derecha"));
 
         StartCoroutine(DodgeCooldown());
     }

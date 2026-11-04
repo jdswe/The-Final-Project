@@ -13,6 +13,7 @@ public class FireballPool : MonoBehaviour
     private void Awake()
     {
         instance = this;
+        if (fireballPrefab == null) { Debug.LogError("FireballPool: falta fireballPrefab"); return; }
 
         for (int i = 0; i < poolSize; i++)
         {
@@ -22,6 +23,11 @@ public class FireballPool : MonoBehaviour
         }
     }
 
+    private void OnDestroy()
+    {
+        if (instance == this) instance = null;
+    }
+
     public GameObject GetFireball(Vector3 position, Quaternion rotation)
     {
         GameObject fireball;
@@ -29,12 +35,10 @@ public class FireballPool : MonoBehaviour
         if (fireballPool.Count > 0)
         {
             fireball = fireballPool.Dequeue();
-            Debug.Log("✅ Fireball obtenida del pool.");
         }
         else
         {
             fireball = Instantiate(fireballPrefab);
-            Debug.Log("⚠️ Pool vacío. Instanciando nueva fireball.");
         }
 
         fireball.transform.position = position;
@@ -46,6 +50,7 @@ public class FireballPool : MonoBehaviour
 
     public void ReturnFireball(GameObject fireball)
     {
+        if (fireball == null || !fireball.activeSelf) return; // evita encolar dos veces la misma bola
         fireball.SetActive(false);
         fireballPool.Enqueue(fireball);
     }

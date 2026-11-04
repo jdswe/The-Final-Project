@@ -97,11 +97,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 50
   damage: 1
-  slowPercentage: 0.8
+  slowPercentage: 1
   slowDuration: 3
   angle: 0
   direction: {x: 0, y: 0, z: 1}
   lifeTime: 5
+  freezeAmount: 1
+  teleportChance: 0.35
+  teleportMinDistance: 3
+  teleportMaxDistance: 7
+  gravityScale: 0.25
+  jitter: 2
+  freezeVfx: {fileID: 4924508274929071776, guid: 0edef91621bb6b34384ccc9dbb98729c, type: 3}
+  teleportVfx: {fileID: 6465249256851274223, guid: d5774d459f0f43d4591f34994be1404e, type: 3}
 --- !u!1001 &90427085253113912
 PrefabInstance:
   m_ObjectHideFlags: 0

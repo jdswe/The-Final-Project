@@ -12,6 +12,11 @@ public class PlayerCombat : MonoBehaviour
 
     [SerializeField] private GameObject hitBox;
 
+    [Header("Chancla del Destino: auto-apuntado perfecto")]
+    [SerializeField] private float autoAimRange = 8f;      // Busca al enemigo más cercano en este radio
+    [SerializeField] private float guaranteedHitRange = 3.5f; // Dentro de este rango el golpe nunca falla
+    private HealthManager meleeTarget;
+
     public bool isMeleeDefending { get; private set; } = false;
 
     void Start()
@@ -59,6 +64,21 @@ public class PlayerCombat : MonoBehaviour
     {
         animator.SetBool("isAttacking", true);
 
+        // Auto-apuntado: girar hacia el enemigo más cercano
+        meleeTarget = FindNearestEnemy();
+        if (meleeTarget != null)
+        {
+            Vector3 look = meleeTarget.transform.position - transform.position;
+            look.y = 0f;
+            if (look.sqrMagnitude > 0.001f)
+            {
+                Quaternion rot = Quaternion.LookRotation(look);
+                Rigidbody rb = GetComponent<Rigidbody>();
+                if (rb != null) rb.MoveRotation(rot);
+                transform.rotation = rot;
+            }
+        }
+
         isMeleeDefending = true; // ← Activamos la defensa
 
         Invoke(nameof(ActivateHitbox), 0.2f);
@@ -71,6 +91,29 @@ public class PlayerCombat : MonoBehaviour
     private void ActivateHitbox()
     {
         if (hitBox != null) hitBox.SetActive(true);
+
+        // Impacto garantizado si el objetivo sigue cerca
+        if (meleeTarget != null && hitBox != null &&
+            Vector3.Distance(transform.position, meleeTarget.transform.position) <= guaranteedHitRange)
+        {
+            MeleeHitbox mh = hitBox.GetComponent<MeleeHitbox>();
+            if (mh != null) mh.Strike(meleeTarget);
+        }
+        meleeTarget = null;
+    }
+
+    private HealthManager FindNearestEnemy()
+    {
+        HealthManager best = null;
+        float bestDist = float.MaxValue;
+        foreach (Collider c in Physics.OverlapSphere(transform.position, autoAimRange, ~0, QueryTriggerInteraction.Ignore))
+        {
+            HealthManager h = WeaponPhysics.GetEnemyHealth(c);
+            if (h == null || h.IsDead) continue;
+            float d = (h.transform.position - transform.position).sqrMagnitude;
+            if (d < bestDist) { bestDist = d; best = h; }
+        }
+        return best;
     }
 
     private void DisableDefense()

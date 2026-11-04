@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class ThrowableObject : MonoBehaviour
 {
@@ -20,22 +20,13 @@ public class ThrowableObject : MonoBehaviour
                 break;
         }
     }
-    private void Start()
-    {
-        Debug.Log($"Objeto creado: {gameObject.name}");
-    }
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log($"Colisión detectada con: {collision.gameObject.name}");
-
-        foreach (ContactPoint contact in collision.contacts)
-        {
-            Debug.Log($"Punto de colisión: {contact.point}");
-        }
-
         if (collision.gameObject.CompareTag("Player"))
         {
-            Debug.Log($"Golpeó al jugador con {damage} de daño");
+            // Antes solo imprimía un log: ahora sí hace daño al jugador
+            HealthManager health = collision.gameObject.GetComponentInParent<HealthManager>();
+            if (health != null) health.takeDamage(damage);
         }
 
     }

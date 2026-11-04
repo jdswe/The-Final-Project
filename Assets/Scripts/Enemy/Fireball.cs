@@ -7,6 +7,8 @@ public class Fireball : MonoBehaviour
     public float lifetime = 5f;
     public float detectionRadius = 2f; // Distancia mínima para hacer daño
     public GameObject explosionEffect; // Asigna un prefab de explosión
+    [Tooltip("Grados por segundo que puede girar persiguiendo al jugador (para que se pueda esquivar)")]
+    public float homingTurnRate = 90f;
 
     private Transform target;
     private bool isActive = false;
@@ -23,13 +25,14 @@ public class Fireball : MonoBehaviour
     {
         if (!isActive || target == null) return;
 
-        // Movimiento hacia el jugador
-        Vector3 direction = (target.position - transform.position).normalized;
+        // Movimiento teledirigido con giro limitado: antes perseguía perfecto y era imposible de esquivar
+        Vector3 toTarget = (target.position + Vector3.up * 0.8f - transform.position).normalized;
+        Vector3 direction = Vector3.RotateTowards(transform.forward, toTarget, homingTurnRate * Mathf.Deg2Rad * Time.deltaTime, 0f);
         transform.position += direction * speed * Time.deltaTime;
         transform.forward = direction;
 
         // Raycast corto para detectar si está cerca del player
-        if (Physics.Raycast(transform.position, direction, out RaycastHit hit, detectionRadius))
+        if (Physics.Raycast(transform.position, direction, out RaycastHit hit, detectionRadius, ~0, QueryTriggerInteraction.Ignore))
         {
             if (hit.collider.CompareTag("Player"))
             {
@@ -50,7 +53,6 @@ public class Fireball : MonoBehaviour
 
         if (combat != null && combat.isMeleeDefending)
         {
-            Debug.Log("🛡️ Daño bloqueado por ataque cuerpo a cuerpo");
             Deactivate(); // Aun así explotamos y desaparece
             return;
         }
@@ -64,7 +66,6 @@ public class Fireball : MonoBehaviour
 
         if (health != null)
         {
-            Debug.Log("💥 Fireball explotó cerca del jugador e hizo daño");
             health.takeDamage(damage);
         }
 
@@ -98,6 +99,9 @@ public class Fireball : MonoBehaviour
 
     private void Deactivate()
     {
-        FireballPool.instance.ReturnFireball(gameObject);
+        isActive = false;
+        CancelInvoke();
+        if (FireballPool.instance != null) FireballPool.instance.ReturnFireball(gameObject);
+        else Destroy(gameObject);
     }
 }

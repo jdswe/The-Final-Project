@@ -20,6 +20,9 @@ public class PlayerLevel2Combat : MonoBehaviour
     public float meleeRange = 2.2f;
     public float meleeDamage = 80f;
     public float parryWindow = 0.35f;
+    [Tooltip("Física absurda del GDD: el chanclazo manda a volar a la mamá")]
+    public float meleeLaunchForce = 22f;
+    public float meleeLaunchStun = 2f;
     public float parryRadius = 2.0f;
 
     private float lastFireTime = -10f;
@@ -105,6 +108,13 @@ public class PlayerLevel2Combat : MonoBehaviour
             if (enemyHealth != null && enemyHealth != health)
             {
                 enemyHealth.takeDamage(meleeDamage);
+                if (!enemyHealth.IsDead)
+                {
+                    Vector3 away = enemyHealth.transform.position - transform.position;
+                    away.y = 0f;
+                    Vector3 impulse = away.normalized * meleeLaunchForce + Vector3.up * meleeLaunchForce * 0.6f;
+                    WeaponPhysics.Launch(enemyHealth.gameObject, impulse, meleeLaunchStun);
+                }
                 break;
             }
         }

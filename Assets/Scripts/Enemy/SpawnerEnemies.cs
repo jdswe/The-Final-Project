@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 
 public class SpawnerEnemies : MonoBehaviour
@@ -22,7 +22,6 @@ public class SpawnerEnemies : MonoBehaviour
         {
             if (zones != null && zones.Length > 0 && AudioManager.Instance != null)
                 AudioManager.Instance.PlaySfx(zones[0].songName);
-            Debug.Log("Spawner activado: el jugador entró en la zona.");
             playerInside = true;
             StartSpawning();
         }
@@ -46,9 +45,10 @@ public class SpawnerEnemies : MonoBehaviour
             Transform spawnPoint = zone.pointsSpawn[Random.Range(0, zone.pointsSpawn.Length)];
             GameObject enemyPrefab = zone.enemiesAvailable[Random.Range(0, zone.enemiesAvailable.Length)];
 
-            Instantiate(enemyPrefab, spawnPoint.position, Quaternion.identity);
-            
-            Debug.Log("Instanciando enemigo en: " + spawnPoint.position);
+            if (spawnPoint == null || enemyPrefab == null) continue;
+
+            // Aparecer ligeramente sobre el suelo para no quedar atrapado dentro del terreno
+            Instantiate(enemyPrefab, spawnPoint.position + Vector3.up * 0.2f, Quaternion.identity);
             yield return new WaitForSeconds(Random.Range(2f, 5f)); 
         }
     }

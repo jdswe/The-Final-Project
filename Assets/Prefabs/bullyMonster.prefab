@@ -2477,7 +2477,7 @@ MonoBehaviour:
   isDodging: 0
   threatLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
   throwPoint: {fileID: 8867958597649778030}
   throwCooldown: 3
   minimumDistance: 7

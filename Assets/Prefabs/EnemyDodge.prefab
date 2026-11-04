@@ -3808,7 +3808,7 @@ MonoBehaviour:
   detectionRange: 15
   pushForce: 5
   attackCooldown: 1
-  nextZoneTag: ZoneHigh
+  nextZoneTag: ZoneHIgh
   dodgeCooldown: 2
   dodgeForce: 10
   threatDetectionRadius: 10

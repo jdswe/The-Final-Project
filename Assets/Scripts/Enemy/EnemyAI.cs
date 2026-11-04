@@ -1,20 +1,28 @@
 using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Jefe del nivel 1 (Cam, el Colosal CiberBully): mantiene distancia, lanza bolas de fuego
+/// teledirigidas y esquiva los proyectiles del jugador.
+/// </summary>
 public class EnemyAI : EnemyDodge
 {
     public Transform throwPoint;
     public float throwCooldown = 3f;
     public float minimumDistance = 7f;
 
+    [Header("Muerte del jefe")]
+    public float deathDelay = 2.5f;
+    public string nextSceneOnDeath = "cinematic 3";
+
     protected float lastThrowTime = 0f;
     private bool isThrowing = false;
 
     protected override void Update()
     {
-        if (player == null || isThrowing)
+        if (AIBlocked() || isThrowing)
         {
-            animator.SetBool("isRunning", false);
+            SetAnimBool("isRunning", false);
             return;
         }
 
@@ -43,27 +51,32 @@ public class EnemyAI : EnemyDodge
         {
             StopMoving();
         }
+
+        // El jefe también esquiva (antes nunca lo hacía porque Update no llamaba a la base)
+        DetectThreats();
+    }
+
+    protected override void OnInterrupted()
+    {
+        base.OnInterrupted();
+        isThrowing = false;
     }
 
     public override IEnumerator AttackSequence()
     {
-        Debug.Log("🔥 Iniciando secuencia de ataque con fuego");
-
         isAttacking = true;
         isThrowing = true;
 
-        animator.CrossFade("monster punch", 0.1f);
+        if (animator != null) animator.CrossFade("monster trow", 0.1f);
 
         yield return new WaitForSeconds(0.5f); // Tiempo para coincidir con animación
 
-        LaunchFireball();
+        if (!AIBlocked()) LaunchFireball();
 
         yield return new WaitForSeconds(0.5f); // Espera antes de permitir otro ataque
 
         isThrowing = false;
         isAttacking = false;
-
-        Debug.Log("✅ Ataque de fuego completado");
     }
 
     private void LaunchFireball()
@@ -71,6 +84,12 @@ public class EnemyAI : EnemyDodge
         if (throwPoint == null)
         {
             Debug.LogWarning("⚠️ throwPoint no está asignado en el inspector.");
+            return;
+        }
+
+        if (FireballPool.instance == null)
+        {
+            Debug.LogWarning("⚠️ No hay FireballPool en la escena.");
             return;
         }
 
@@ -82,28 +101,38 @@ public class EnemyAI : EnemyDodge
 
         // Ignorar colisiones con el enemigo
         Collider fireballCol = fireball.GetComponent<Collider>();
-        Collider[] enemyColliders = GetComponentsInChildren<Collider>();
-
-        foreach (Collider col in enemyColliders)
+        if (fireballCol != null)
         {
-            if (fireballCol != null && col != null)
+            foreach (Collider col in GetComponentsInChildren<Collider>())
             {
-                Physics.IgnoreCollision(fireballCol, col);
+                if (col != null) Physics.IgnoreCollision(fireballCol, col);
             }
         }
 
         Fireball fireballScript = fireball.GetComponent<Fireball>();
         if (fireballScript != null)
         {
-            fireballScript.SetTarget(player); // ← aquí está el cambio importante
+            fireballScript.SetTarget(player);
         }
-
-        Debug.Log("🔥 Fireball lanzada desde " + throwPoint.name);
     }
 
     public override void Die()
     {
-        GameManager.instance.LoadScene("cinematic 3");
+        if (isDead) return;
+        isDead = true;
+        StopAllCoroutines();
+        OnInterrupted();
+        StopMoving();
+        PlayDeathAnimation();
+        StartCoroutine(BossDeathSequence());
     }
 
+    private IEnumerator BossDeathSequence()
+    {
+        // Deja ver la animación de muerte antes de la cinemática
+        yield return new WaitForSeconds(deathDelay);
+
+        if (GameManager.instance != null) GameManager.instance.LoadScene(nextSceneOnDeath);
+        else UnityEngine.SceneManagement.SceneManager.LoadScene(nextSceneOnDeath);
+    }
 }

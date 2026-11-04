@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class EnemyHealth : MonoBehaviour
@@ -15,7 +15,8 @@ public class EnemyHealth : MonoBehaviour
 
     private void Update()
     {
-        if (healthBarUI != null)
+        if (mainCamera == null) mainCamera = Camera.main;
+        if (healthBarUI != null && mainCamera != null)
         {
             healthBarUI.position = transform.position + offset;
             healthBarUI.LookAt(mainCamera.transform);

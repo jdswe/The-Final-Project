@@ -156,3 +156,12 @@ MonoBehaviour:
   angle: 0
   direction: {x: -1, y: 0, z: 0}
   lifeTime: 5
+  maxBounces: 3
+  explosionRadius: 4
+  splashDamage: 40
+  launchForce: 18
+  upwardsLift: 1.2
+  launchStunTime: 1.5
+  bounceBoost: 1.15
+  explosionVfx: {fileID: 5162910912013668194, guid: cf82839c411151342a7b2337bda9fb34, type: 3}
+  quackSfx: quack

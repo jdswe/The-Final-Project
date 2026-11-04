@@ -254,6 +254,160 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: control sprites_ESC
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 1806
+        width: 219
+        height: 202
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 83703469d4fa485d845b2f6d8095e7a3
+      internalID: -1635867623
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: control sprites_C
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 1806
+        width: 219
+        height: 202
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d4c75e8222674921afe6273787e7d44c
+      internalID: 242919145
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: control sprites_X
+      rect:
+        serializedVersion: 2
+        x: 560
+        y: 1806
+        width: 219
+        height: 202
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 85942f059edd40f6ae2c47278189f7cd
+      internalID: 1151546559
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: control sprites_SHIFT
+      rect:
+        serializedVersion: 2
+        x: 820
+        y: 1806
+        width: 401
+        height: 202
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 22120780b25e4193b597d2afc8955a21
+      internalID: 371604198
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: control sprites_SPACE
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 1546
+        width: 640
+        height: 202
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 29c63d85af03495d90404b937497fbd4
+      internalID: -1116974621
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: control sprites_LMB
+      rect:
+        serializedVersion: 2
+        x: 760
+        y: 1204
+        width: 433
+        height: 544
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 15092c1c01a44046b63bde7538465632
+      internalID: 490503660
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: control sprites_RMB
+      rect:
+        serializedVersion: 2
+        x: 1240
+        y: 1204
+        width: 433
+        height: 544
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9dabf349b9b646fcbc3e131e23d75641
+      internalID: -1671873803
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -274,6 +428,13 @@ TextureImporter:
       control sprites_3: -1120241757
       control sprites_4: 1075012867
       control sprites_5: 409116157
+      control sprites_ESC: -1635867623
+      control sprites_C: 242919145
+      control sprites_X: 1151546559
+      control sprites_SHIFT: 371604198
+      control sprites_SPACE: -1116974621
+      control sprites_LMB: 490503660
+      control sprites_RMB: -1671873803
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 /// <summary>
 /// Controla el nivel 2: restablece el estado del juego al entrar, muestra las instrucciones
@@ -13,11 +14,25 @@ public class SecondLevelDirector : MonoBehaviour
     public HealthManager playerHealth;
     public HealthManager momHealth;
 
+    [System.Serializable]
+    public class ControlHint
+    {
+        public Sprite icon;          // sprite de "control sprites.png"
+        public string label;
+    }
+
+    [Header("Estilo (mismo de la UI del juego)")]
+    public TMP_FontAsset font;       // fuente de la UI (ImportsFonts)
+    public Color barBackColor = new Color(0f, 0f, 0f, 0.75f);
+    public Color playerBarColor = new Color(0.2f, 0.85f, 0.95f);
+    public Color bossBarColor = new Color(0.95f, 0.35f, 0.55f);
+
     [Header("Textos")]
     public string bossName = "MAMÁ";
-    [TextArea]
-    public string instructions = "¡Mamá está de mal humor!\nClic izquierdo: lanzar patos de goma\nClic derecho: chanclazo (devuelve sus chanclas)\nShift: correr  ·  Espacio: saltar";
-    public float instructionsTime = 6f;
+    public string playerName = "JETLEE";
+    public string title = "¡Mamá está de mal humor!";
+    public ControlHint[] controls;   // teclas que se muestran al iniciar el nivel
+    public float instructionsTime = 7f;
 
     private RectTransform playerFill;
     private RectTransform momFill;
@@ -78,41 +93,76 @@ public class SecondLevelDirector : MonoBehaviour
         CanvasScaler scaler = canvasGO.GetComponent<CanvasScaler>();
         scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
         scaler.referenceResolution = new Vector2(1920, 1080);
-
-        Font font = LoadFont();
+        scaler.matchWidthOrHeight = 0.5f;
 
         // Barra de la mamá (arriba, centrada)
-        momFill = CreateBar(canvasGO.transform, "MomHealth", new Vector2(0.5f, 1f), new Vector2(0f, -60f),
-            new Vector2(900f, 34f), new Color(0.85f, 0.15f, 0.35f), bossName, font);
+        momFill = CreateBar(canvasGO.transform, "MomHealth", new Vector2(0.5f, 1f), new Vector2(0f, -70f),
+            new Vector2(900f, 30f), bossBarColor, bossName);
         if (momHealth == null) momFill.parent.gameObject.SetActive(false);
 
         // Barra del jugador (abajo a la izquierda)
-        playerFill = CreateBar(canvasGO.transform, "PlayerHealth", new Vector2(0f, 0f), new Vector2(260f, 60f),
-            new Vector2(420f, 28f), new Color(0.2f, 0.85f, 0.95f), "JETLEE", font);
+        playerFill = CreateBar(canvasGO.transform, "PlayerHealth", new Vector2(0f, 0f), new Vector2(270f, 70f),
+            new Vector2(420f, 24f), playerBarColor, playerName);
         if (playerHealth == null) playerFill.parent.gameObject.SetActive(false);
 
-        // Instrucciones
-        instructionsPanel = new GameObject("Instructions", typeof(RectTransform), typeof(Image));
-        instructionsPanel.transform.SetParent(canvasGO.transform, false);
-        RectTransform ip = instructionsPanel.GetComponent<RectTransform>();
-        ip.anchorMin = ip.anchorMax = new Vector2(0.5f, 0.5f);
-        ip.sizeDelta = new Vector2(900f, 260f);
-        ip.anchoredPosition = new Vector2(0f, 120f);
-        instructionsPanel.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0.6f);
-        Text t = CreateText(instructionsPanel.transform, instructions, font, 36, TextAnchor.MiddleCenter);
-        Stretch(t.rectTransform);
+        BuildControls(canvasGO.transform);
     }
 
-    RectTransform CreateBar(Transform parent, string name, Vector2 anchor, Vector2 pos, Vector2 size, Color color, string label, Font font)
+    void BuildControls(Transform parent)
+    {
+        instructionsPanel = new GameObject("Controls", typeof(RectTransform), typeof(Image));
+        instructionsPanel.transform.SetParent(parent, false);
+        RectTransform ip = instructionsPanel.GetComponent<RectTransform>();
+        ip.anchorMin = ip.anchorMax = new Vector2(0.5f, 0.5f);
+        ip.anchoredPosition = new Vector2(0f, 60f);
+        Image back = instructionsPanel.GetComponent<Image>();
+        back.color = new Color(0.05f, 0.04f, 0.15f, 0.6f);
+        back.raycastTarget = false;
+
+        int count = controls != null ? controls.Length : 0;
+        float cell = 230f, iconH = 110f;
+        ip.sizeDelta = new Vector2(Mathf.Max(600f, count * cell + 60f), 300f);
+
+        TextMeshProUGUI header = CreateText(instructionsPanel.transform, title, 44);
+        header.rectTransform.anchorMin = header.rectTransform.anchorMax = new Vector2(0.5f, 1f);
+        header.rectTransform.anchoredPosition = new Vector2(0f, -45f);
+        header.rectTransform.sizeDelta = new Vector2(ip.sizeDelta.x, 60f);
+
+        for (int i = 0; i < count; i++)
+        {
+            float x = (i - (count - 1) * 0.5f) * cell;
+            ControlHint hint = controls[i];
+
+            if (hint.icon != null)
+            {
+                GameObject iconGO = new GameObject("Icon " + hint.label, typeof(RectTransform), typeof(Image));
+                iconGO.transform.SetParent(instructionsPanel.transform, false);
+                Image img = iconGO.GetComponent<Image>();
+                img.sprite = hint.icon;
+                img.preserveAspect = true;
+                img.raycastTarget = false;
+                RectTransform rt = img.rectTransform;
+                rt.anchoredPosition = new Vector2(x, -10f);
+                rt.sizeDelta = new Vector2(cell - 30f, iconH);
+            }
+
+            TextMeshProUGUI label = CreateText(instructionsPanel.transform, hint.label, 28);
+            label.rectTransform.anchoredPosition = new Vector2(x, -100f);
+            label.rectTransform.sizeDelta = new Vector2(cell, 60f);
+        }
+    }
+
+    RectTransform CreateBar(Transform parent, string name, Vector2 anchor, Vector2 pos, Vector2 size, Color color, string label)
     {
         GameObject bg = new GameObject(name, typeof(RectTransform), typeof(Image));
         bg.transform.SetParent(parent, false);
         RectTransform bgRt = bg.GetComponent<RectTransform>();
         bgRt.anchorMin = bgRt.anchorMax = anchor;
-        bgRt.pivot = new Vector2(0.5f, 0.5f);
         bgRt.sizeDelta = size;
         bgRt.anchoredPosition = pos;
-        bg.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0.65f);
+        Image bgImg = bg.GetComponent<Image>();
+        bgImg.color = barBackColor;
+        bgImg.raycastTarget = false;
 
         GameObject fill = new GameObject("Fill", typeof(RectTransform), typeof(Image));
         fill.transform.SetParent(bg.transform, false);
@@ -121,42 +171,29 @@ public class SecondLevelDirector : MonoBehaviour
         fillRt.anchorMax = Vector2.one;
         fillRt.offsetMin = new Vector2(4f, 4f);
         fillRt.offsetMax = new Vector2(-4f, -4f);
-        fill.GetComponent<Image>().color = color;
+        Image fillImg = fill.GetComponent<Image>();
+        fillImg.color = color;
+        fillImg.raycastTarget = false;
 
-        Text t = CreateText(bg.transform, label, font, 24, TextAnchor.MiddleCenter);
-        Stretch(t.rectTransform);
+        // Nombre encima de la barra
+        TextMeshProUGUI t = CreateText(bg.transform, label, 30);
+        t.rectTransform.anchorMin = t.rectTransform.anchorMax = new Vector2(0.5f, 1f);
+        t.rectTransform.anchoredPosition = new Vector2(0f, 24f);
+        t.rectTransform.sizeDelta = new Vector2(size.x, 40f);
         return fillRt;
     }
 
-    static Text CreateText(Transform parent, string content, Font font, int size, TextAnchor anchor)
+    TextMeshProUGUI CreateText(Transform parent, string content, float size)
     {
-        GameObject go = new GameObject("Text", typeof(RectTransform), typeof(Text));
+        GameObject go = new GameObject("Text", typeof(RectTransform), typeof(TextMeshProUGUI));
         go.transform.SetParent(parent, false);
-        Text t = go.GetComponent<Text>();
+        TextMeshProUGUI t = go.GetComponent<TextMeshProUGUI>();
+        if (font != null) t.font = font;
         t.text = content;
-        t.font = font;
         t.fontSize = size;
-        t.alignment = anchor;
+        t.alignment = TextAlignmentOptions.Center;
         t.color = Color.white;
         t.raycastTarget = false;
         return t;
-    }
-
-    static void Stretch(RectTransform rt)
-    {
-        rt.anchorMin = Vector2.zero;
-        rt.anchorMax = Vector2.one;
-        rt.offsetMin = rt.offsetMax = Vector2.zero;
-    }
-
-    static Font LoadFont()
-    {
-        Font f = null;
-        try { f = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf"); } catch { }
-        if (f == null)
-        {
-            try { f = Resources.GetBuiltinResource<Font>("Arial.ttf"); } catch { }
-        }
-        return f;
     }
 }

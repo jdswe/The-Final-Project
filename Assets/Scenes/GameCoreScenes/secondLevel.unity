@@ -1170,9 +1170,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerHealth: {fileID: 0}
   momHealth: {fileID: 0}
+  font: {fileID: 11400000, guid: e0fcaa2ff15fcb04fa06b1771616f812, type: 2}
+  barBackColor: {r: 0, g: 0, b: 0, a: 0.75}
+  playerBarColor: {r: 0.2, g: 0.85, b: 0.95, a: 1}
+  bossBarColor: {r: 0.95, g: 0.35, b: 0.55, a: 1}
   bossName: "MAM\xC1"
-  instructions: "\xA1Mam\xE1 est\xE1 de mal humor!\nClic izquierdo: lanzar patos de goma\nClic derecho: chanclazo (devuelve sus chanclas)\nShift: correr  \xB7  Espacio: saltar"
-  instructionsTime: 6
+  playerName: JETLEE
+  title: "\xA1Mam\xE1 est\xE1 de mal humor!"
+  controls:
+  - icon: {fileID: 735325818, guid: 6104d456d60523e4fa17016ed35343a4, type: 3}
+    label: "WASD: moverse"
+  - icon: {fileID: 1662036641, guid: 6104d456d60523e4fa17016ed35343a4, type: 3}
+    label: "Apuntar / c\xe1mara"
+  - icon: {fileID: 490503660, guid: 6104d456d60523e4fa17016ed35343a4, type: 3}
+    label: Lanzar patos
+  - icon: {fileID: -1671873803, guid: 6104d456d60523e4fa17016ed35343a4, type: 3}
+    label: Chanclazo (devuelve chanclas)
+  - icon: {fileID: 371604198, guid: 6104d456d60523e4fa17016ed35343a4, type: 3}
+    label: Correr
+  - icon: {fileID: -1116974621, guid: 6104d456d60523e4fa17016ed35343a4, type: 3}
+    label: Saltar
+  - icon: {fileID: -1635867623, guid: 6104d456d60523e4fa17016ed35343a4, type: 3}
+    label: Pausa
+  instructionsTime: 7
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
