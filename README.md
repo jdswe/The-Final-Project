@@ -59,9 +59,26 @@ Prepárate para enfrentarte a enemigos inesperados y mecánicas que no siguen re
 
 ### 🎮 CONTROLES
 
-- ⌨️ **Movimiento**: Usa `W`, `A`, `S`, `D`
-- 🔄 **Cambiar arma**: Usa `Tab`
-- ⏸️ **Pausar**: Usa `Escape`
+- ⌨️ **Movimiento**: `W`, `A`, `S`, `D`
+- 🖱️ **Apuntar / cámara**: mover el mouse
+- 🔫 **Disparar**: clic izquierdo (nivel 2: lanzar patos de goma)
+- 🩴 **Cuerpo a cuerpo (Chancla del Destino)**: clic derecho — auto-apunta y manda a volar al enemigo; en el nivel 2 devuelve las chanclas de mamá
+- 🔄 **Rueda de armas**: `Tab`
+- 🎥 **Primera / tercera persona**: `C`
+- 🏃 **Correr**: `Shift` · 🦘 **Saltar**: `Espacio`
+- ⏭️ **Saltar cinemática**: `X`
+- ⏸️ **Pausar**: `Escape`
+
+### 🗺️ FLUJO DEL JUEGO
+
+Intro → Menú → Cinemática 1 → **Nivel 1** (ciudad, el bully) → Cinemática 3 → **Nivel 2** (la casa, mamá con la chancla) → Victoria
+
+### 📂 ESTRUCTURA DEL PROYECTO
+
+- `Assets/Scenes/FlowSceneMenu` – intro y menú · `GameCoreScenes` – niveles, GameOver, GameWin · `Cinematics` – cinemáticas · `_Sandbox` – escenas de prueba (no van en el build)
+- `Assets/Prefabs/Characters` · `Weapons` (y `Weapons/Bullets`) · `Environment` · `VFX` · `UI` · `SecondLevel`
+- `Assets/Scripts/CoreGame` · `CoreUI` · `Enemy` · `ObjectPoolingWeapons` · `PlayerSceneOne` · `SecondLevel` · `Controllers`
+- `Assets/UI/UI Sprites/control sprites.png` – hoja de sprites de los controles (menú, tutoriales y HUD)
 
 
 
