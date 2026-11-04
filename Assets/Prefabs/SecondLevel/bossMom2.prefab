@@ -1034,6 +1034,8 @@ MonoBehaviour:
   rageProjectiles: 3
   rageSpreadAngle: 20
   delayBeforeWin: 2.5
+  rageVfx: {fileID: 7131401307255788800, guid: 4d9a3b35b3bc07649b697df7fb497b6d, type: 3}
+  deathVfx: {fileID: 8464950693656172981, guid: 83ad694f134ab954580473212156b35a, type: 3}
 --- !u!95 &8738376614526860682
 Animator:
   serializedVersion: 7

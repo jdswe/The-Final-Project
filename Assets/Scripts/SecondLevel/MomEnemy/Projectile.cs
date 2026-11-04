@@ -10,6 +10,8 @@ public class Projectile : MonoBehaviour
     public float speed = 10f;
     public float damage = 50f;
     public float spinSpeed = 720f;
+    [Tooltip("Efecto (pack VFX) al impactar")]
+    public GameObject hitVfx;
 
     [HideInInspector] public GameObject owner;
 
@@ -65,6 +67,7 @@ public class Projectile : MonoBehaviour
     {
         if (hasHit) return;
         GameObject other = collision.gameObject;
+        VfxUtil.Spawn(hitVfx, transform.position, Quaternion.identity, 2f);
 
         if (!reflected && other.CompareTag("Player"))
         {

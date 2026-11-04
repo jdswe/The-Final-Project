@@ -23,6 +23,10 @@ public class PlayerLevel2Combat : MonoBehaviour
     [Tooltip("Física absurda del GDD: el chanclazo manda a volar a la mamá")]
     public float meleeLaunchForce = 22f;
     public float meleeLaunchStun = 2f;
+
+    [Header("Efectos (packs VFX)")]
+    public GameObject slapVfx;
+    public GameObject parryVfx;
     public float parryRadius = 2.0f;
 
     private float lastFireTime = -10f;
@@ -98,6 +102,7 @@ public class PlayerLevel2Combat : MonoBehaviour
         parryUntil = Time.time + parryWindow;
         if (animator != null && HasParameter(animator, "isAttacking")) animator.SetTrigger("isAttacking");
         if (AudioManager.Instance != null) AudioManager.Instance.PlaySfx("slap");
+        VfxUtil.Spawn(slapVfx, transform.position + Vector3.up + transform.forward * 1.2f, transform.rotation, 1.5f);
 
         // Golpe cuerpo a cuerpo
         Vector3 center = transform.position + Vector3.up * 1f + transform.forward * (meleeRange * 0.5f);
@@ -129,6 +134,7 @@ public class PlayerLevel2Combat : MonoBehaviour
             {
                 Transform target = p.owner != null ? p.owner.transform : null;
                 p.Reflect(target);
+                VfxUtil.Spawn(parryVfx, p.transform.position, Quaternion.identity, 1.5f);
             }
         }
     }

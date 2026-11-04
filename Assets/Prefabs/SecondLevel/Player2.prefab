@@ -3317,3 +3317,7 @@ MonoBehaviour:
   meleeDamage: 80
   parryWindow: 0.35
   parryRadius: 2
+  meleeLaunchForce: 22
+  meleeLaunchStun: 2
+  slapVfx: {fileID: 8145502431507700120, guid: 000832214335ffd4782827d2a4510f4a, type: 3}
+  parryVfx: {fileID: 496913248247719083, guid: c483142edbf33dc4d9014c13724a0175, type: 3}

@@ -35,6 +35,12 @@ public class MomEnemyController : MonoBehaviour
     [Header("Muerte")]
     public float delayBeforeWin = 2.5f;
 
+    [Header("Efectos (packs VFX)")]
+    public GameObject rageVfx;   // aura mientras está furiosa
+    public GameObject deathVfx;  // explosión al ser derrotada
+
+    private GameObject rageInstance;
+
     private float timer = 0f;
     private float walkTimer = 0f;
     private bool isWalking = false;
@@ -100,6 +106,7 @@ public class MomEnemyController : MonoBehaviour
         {
             isEnraged = true;
             if (animator != null) animator.speed = 1.3f;
+            rageInstance = VfxUtil.Spawn(rageVfx, transform.position, transform.rotation, 0f, transform);
             Debug.Log("😡 ¡La mamá entró en modo furia!");
         }
     }
@@ -231,6 +238,8 @@ public class MomEnemyController : MonoBehaviour
     IEnumerator DeathSequence()
     {
         Debug.Log("🏆 ¡La mamá fue derrotada!");
+        if (rageInstance != null) Destroy(rageInstance);
+        VfxUtil.Spawn(deathVfx, transform.position + Vector3.up, Quaternion.identity, 4f);
 
         // No hay animación de muerte: la mamá cae hacia atrás
         Quaternion start = transform.rotation;
