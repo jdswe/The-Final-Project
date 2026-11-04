@@ -17,15 +17,15 @@ public class PlayerCombat : MonoBehaviour
     void Start()
     {
         animator = GetComponent<Animator>();
-        player=GameObject.Find("Player armed").GetComponent<MovementPlayer>();
-        hitBox.SetActive(false);
+        player = GetComponent<MovementPlayer>();
+        if (hitBox != null) hitBox.SetActive(false);
     }
 
     void Update()
     {
         if (Input.GetButtonDown("Fire1"))
         {
-            fireVfx.Play();
+            if (fireVfx != null) fireVfx.Play();
             HandleFire();
         }
         else if (Input.GetButtonDown("Fire2"))
@@ -70,7 +70,7 @@ public class PlayerCombat : MonoBehaviour
 
     private void ActivateHitbox()
     {
-        hitBox.SetActive(true);
+        if (hitBox != null) hitBox.SetActive(true);
     }
 
     private void DisableDefense()
@@ -80,7 +80,7 @@ public class PlayerCombat : MonoBehaviour
 
     private void DeactivateHitbox()
     {
-        hitBox.SetActive(false);
+        if (hitBox != null) hitBox.SetActive(false);
     }
 
     private void ResetAttack()
@@ -103,6 +103,7 @@ public class PlayerCombat : MonoBehaviour
     public void EquipDefaultWeaponFromSignal()
     {
         WeaponWheelController.weaponID = 1;
-        player.SwitchWeapon(WeaponWheelController.weaponID);
+        if (player == null) player = GetComponent<MovementPlayer>();
+        if (player != null) player.SwitchWeapon(WeaponWheelController.weaponID);
     }
 }

@@ -15,6 +15,13 @@ public class WeaponWheelController : MonoBehaviour
     private void Start()
     {
         player = GameObject.Find("Player armed");
+        if (player == null) player = GameObject.FindWithTag("Player");
+        if (player == null)
+        {
+            Debug.LogWarning("WeaponWheelController: no se encontró el jugador, se desactiva.");
+            enabled = false;
+            return;
+        }
         animator = player.GetComponent<Animator>();
         playerCombat = player.GetComponent<PlayerCombat>();
 
@@ -81,7 +88,7 @@ public class WeaponWheelController : MonoBehaviour
         }
 
         // Asignar el arma a PlayerCombat
-        playerCombat.SetCurrentWeapon(newWeapon);
+        if (playerCombat != null) playerCombat.SetCurrentWeapon(newWeapon);
     }
 
 }

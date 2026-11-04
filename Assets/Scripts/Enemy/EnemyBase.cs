@@ -47,10 +47,11 @@ public class EnemyBase : MonoBehaviour, IMovable
 
     protected virtual void Start()
     {
-        player = GameObject.FindWithTag("Player").transform;
+        GameObject playerObj = GameObject.FindWithTag("Player");
+        if (playerObj != null) player = playerObj.transform;
         enemyRb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
-        playerHealth = player.GetComponent<HealthManager>();
+        if (player != null) playerHealth = player.GetComponent<HealthManager>();
 
         enemyRb.isKinematic = false;
         enemyRb.collisionDetectionMode = CollisionDetectionMode.Continuous;

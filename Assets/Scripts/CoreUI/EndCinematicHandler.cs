@@ -8,13 +8,16 @@ public class EndCinematicHandler : MonoBehaviour
     
     public void LoadGameScene(string name)
     {
+        Time.timeScale = 1;
         SceneManager.LoadScene(name);
     }
 
 
     public void EndCinematic()
     {
-        SceneManager.UnloadSceneAsync(cinematicScene);
+        // Solo descargamos si la escena aditiva sigue cargada (evita error si la senal se dispara dos veces)
+        if (SceneManager.GetSceneByName(cinematicScene).isLoaded)
+            SceneManager.UnloadSceneAsync(cinematicScene);
         
 
     }

@@ -132,9 +132,7 @@ public class WheaponWheelButton : MonoBehaviour
     public void Selected()
     {
         WeaponWheelController.weaponID = id;
-        selectedItem.sprite = icon; // Actualizar la imagen en el Canvas
-
-        Debug.Log($"🔫 Arma {id} seleccionada en el Wheel. Imagen actualizada.");
+        if (selectedItem != null) selectedItem.sprite = icon; // Actualizar la imagen en el Canvas
     }
 
 
@@ -150,11 +148,11 @@ public class WheaponWheelButton : MonoBehaviour
 
     public void HoverEnter()
     {
-        animator.SetBool("hover", true);
+        if (animator != null) animator.SetBool("hover", true);
     }
 
     public void HoverExit()
     {
-        animator.SetBool("hover", false);
+        if (animator != null) animator.SetBool("hover", false);
     }
 }

@@ -13,9 +13,9 @@ public class StudioCopyrightFade : MonoBehaviour
 
     void Start()
     {
-        panelCanvasGroup.alpha = 0;
-        studioText.alpha = 0;
-        copyRightText.alpha = 0; // Agregar el fade a este texto también
+        if (panelCanvasGroup != null) panelCanvasGroup.alpha = 0;
+        if (studioText != null) studioText.alpha = 0;
+        if (copyRightText != null) copyRightText.alpha = 0; // Agregar el fade a este texto también
 
         StartCoroutine(FadeIn());
     }
@@ -30,16 +30,16 @@ public class StudioCopyrightFade : MonoBehaviour
             float newAlpha = Mathf.Lerp(0, targetAlpha, elapsed / fadeDuration);
 
             // Aplicamos el alpha a todos los elementos
-            panelCanvasGroup.alpha = newAlpha;
-            studioText.alpha = newAlpha;
-            copyRightText.alpha = newAlpha;
+            if (panelCanvasGroup != null) panelCanvasGroup.alpha = newAlpha;
+            if (studioText != null) studioText.alpha = newAlpha;
+            if (copyRightText != null) copyRightText.alpha = newAlpha;
 
             yield return null;
         }
 
         // Asegurar que queda en el targetAlpha exacto
-        panelCanvasGroup.alpha = targetAlpha;
-        studioText.alpha = targetAlpha;
-        copyRightText.alpha = targetAlpha;
+        if (panelCanvasGroup != null) panelCanvasGroup.alpha = targetAlpha;
+        if (studioText != null) studioText.alpha = targetAlpha;
+        if (copyRightText != null) copyRightText.alpha = targetAlpha;
     }
 }

@@ -9,7 +9,8 @@ public class CinematicTrigger : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         // Verificar si el objeto que entra en el trigger es el jugador
-        if (other.CompareTag("Player") && !isCinematicPlaying)
+        // Level 1 tiene 2 triggers hacia "cinematic 2": no cargarla dos veces
+        if (other.CompareTag("Player") && !isCinematicPlaying && !SceneManager.GetSceneByName(cinematicScene).isLoaded)
         {
             //listo other.GetComponent<PlayerController>().DisablePlayerControl();
             StartCinematic();

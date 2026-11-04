@@ -27,6 +27,7 @@ public class SceneSwitcher : MonoBehaviour
     void LoadMenuScene()
     {
         menuShown = true; // Evitar múltiples activaciones
+        Time.timeScale = 1;
         SceneManager.LoadScene(nuevaEscena); // Cambia a la nueva escena
     }
 }

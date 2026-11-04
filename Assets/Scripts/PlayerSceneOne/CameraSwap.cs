@@ -21,6 +21,8 @@ public class CameraSwap : MonoBehaviour
 
     void Update()
     {
+        if (Time.timeScale == 0f || playerBody == null) return; // En pausa / rueda de armas no se mueve la camara
+
         if (Input.GetKeyDown(KeyCode.C))
         {
             isFirstPerson = !isFirstPerson;
@@ -35,20 +37,20 @@ public class CameraSwap : MonoBehaviour
             playerBody.Rotate(Vector3.up * mouseX);
             yRotation -= mouseY;
             yRotation = Mathf.Clamp(yRotation, -verticalLookLimit, verticalLookLimit);
-            thirdPersonCamera.transform.localRotation = Quaternion.Euler(yRotation, 0f, 0f);
+            if (thirdPersonCamera != null) thirdPersonCamera.transform.localRotation = Quaternion.Euler(yRotation, 0f, 0f);
         }
         else
         {
             xRotation -= mouseY;
             xRotation = Mathf.Clamp(xRotation, -verticalLookLimit, verticalLookLimit);
-            firstPersonCamera.transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+            if (firstPersonCamera != null) firstPersonCamera.transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
             playerBody.Rotate(Vector3.up * mouseX);
         }
     }
 
     void SwitchCamera()
     {
-        thirdPersonCamera.gameObject.SetActive(!isFirstPerson);
-        firstPersonCamera.gameObject.SetActive(isFirstPerson);
+        if (thirdPersonCamera != null) thirdPersonCamera.gameObject.SetActive(!isFirstPerson);
+        if (firstPersonCamera != null) firstPersonCamera.gameObject.SetActive(isFirstPerson);
     }
 }

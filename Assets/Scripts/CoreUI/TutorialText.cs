@@ -6,12 +6,12 @@ public class TutorialText : MonoBehaviour
 
     private void Start()
     {
-        textAnimator.Play("Hidden"); // Asegura que inicie oculto
+        if (textAnimator != null) textAnimator.Play("Hidden"); // Asegura que inicie oculto
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (textAnimator != null && other.CompareTag("Player"))
         {
             textAnimator.SetBool("show", true);  // Activa la animación de entrada
         }
@@ -19,7 +19,7 @@ public class TutorialText : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (textAnimator != null && other.CompareTag("Player"))
         {
             textAnimator.SetBool("show", false);
             textAnimator.SetTrigger("hide");  // Activa la animación de salida

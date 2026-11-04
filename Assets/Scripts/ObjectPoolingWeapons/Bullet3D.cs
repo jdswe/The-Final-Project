@@ -52,6 +52,12 @@ public class Bullet3D : MonoBehaviour
         Deactivate();
     }
 
+    private void OnDisable()
+    {
+        // Evita que un Invoke pendiente desactive la bala cuando se reutilice desde el pool
+        CancelInvoke();
+    }
+
     private void Deactivate()
     {
         // Cancelar cualquier invocación pendiente para evitar errores

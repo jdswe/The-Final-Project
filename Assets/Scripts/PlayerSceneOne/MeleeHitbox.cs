@@ -12,7 +12,7 @@ public class MeleeHitbox : MonoBehaviour
             var health = other.GetComponent<HealthManager>();
             if (health != null)
             {
-                MeleeVfx.Play();
+                if (MeleeVfx != null) MeleeVfx.Play();
                 health.takeDamage(meleeDamage);
                 Debug.Log($"🗡️ Golpe cuerpo a cuerpo a {other.name}, daño: {meleeDamage}");
 

@@ -13,6 +13,11 @@ public class UiMenuControl : MonoBehaviour
 
     void Start()
     {
+        // Al volver desde el juego el cursor queda bloqueado y el tiempo puede estar en 0
+        Time.timeScale = 1;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
         Debug.Log("Cargando música: " + PlayerPrefs.GetFloat("musicVolume", 1f));
         Debug.Log("Cargando SFX: " + PlayerPrefs.GetFloat("sfxVolume", 1f));
 
@@ -40,7 +45,7 @@ public class UiMenuControl : MonoBehaviour
     public void SetMusicVolume()
     {
         float musicVolume = musicSlider.value;
-        audioMixer.SetFloat("Music", Mathf.Log10(musicVolume) * 20);
+        audioMixer.SetFloat("Music", Mathf.Log10(Mathf.Max(musicVolume, 0.0001f)) * 20);
         PlayerPrefs.SetFloat("musicVolume", musicVolume);
         PlayerPrefs.Save();
         Debug.Log("Música guardada: " + PlayerPrefs.GetFloat("musicVolume")); // Verifica que se guarda
@@ -49,7 +54,7 @@ public class UiMenuControl : MonoBehaviour
     public void SetSfxVolume()
     {
         float sfxVolume = sfxSlider.value;
-        audioMixer.SetFloat("sfx", Mathf.Log10(sfxVolume) * 20);
+        audioMixer.SetFloat("sfx", Mathf.Log10(Mathf.Max(sfxVolume, 0.0001f)) * 20);
         PlayerPrefs.SetFloat("sfxVolume", sfxVolume);
         PlayerPrefs.Save();
         Debug.Log("SFX guardado: " + PlayerPrefs.GetFloat("sfxVolume")); // Verifica que se guarda

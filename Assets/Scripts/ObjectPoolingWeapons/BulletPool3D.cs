@@ -51,23 +51,23 @@ public class BulletPool3D : MonoBehaviour
             {
                 bullet.transform.position = position;
                 bullet.transform.rotation = rotation;
-                bullet.SetActive(true);
 
-                // Reiniciar su Rigidbody si tiene uno
+                // Reiniciar su Rigidbody ANTES de activarla: OnEnable aplica la fuerza del disparo
                 Rigidbody rb = bullet.GetComponent<Rigidbody>();
                 if (rb != null)
                 {
+                    rb.position = position;
                     rb.linearVelocity = Vector3.zero;
                     rb.angularVelocity = Vector3.zero;
                 }
 
+                bullet.SetActive(true);
                 return bullet;
             }
         }
 
         // Si no hay balas disponibles, expandir el pool
         GameObject newBullet = Instantiate(bulletPrefab, position, rotation);
-        newBullet.SetActive(false);
 
         // Configurar el evento "destroyed" para la nueva bala
         Bullet3D bulletScript = newBullet.GetComponent<Bullet3D>();
@@ -77,7 +77,7 @@ public class BulletPool3D : MonoBehaviour
         }
 
         bulletsCharged.Add(newBullet);
-        return newBullet;
+        return newBullet; // Instantiate ya la activó (OnEnable aplicó la fuerza)
     }
 
     public void ReturnBullet(GameObject bullet)

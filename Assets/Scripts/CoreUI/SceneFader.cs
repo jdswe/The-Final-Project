@@ -12,9 +12,9 @@ public class SceneFader : MonoBehaviour
 
     void Start()
     {
-        canvasGroup = GetComponent<CanvasGroup>();
+        if (canvasGroup == null) canvasGroup = GetComponent<CanvasGroup>();
 
-        AudioManager.Instance.PlayMusic("BGMusic");
+        if (AudioManager.Instance != null) AudioManager.Instance.PlayMusic("BGMusic");
     }
 
     void Update()
@@ -37,10 +37,10 @@ public class SceneFader : MonoBehaviour
         while (elapsed < fadeDuration)
         {
             elapsed += Time.deltaTime;
-            canvasGroup.alpha = Mathf.Lerp(1, 0, elapsed / fadeDuration);
+            if (canvasGroup != null) canvasGroup.alpha = Mathf.Lerp(1, 0, elapsed / fadeDuration);
             yield return null;
         }
-        AudioManager.Instance.PlaySfx("intro");
+        if (AudioManager.Instance != null) AudioManager.Instance.PlaySfx("intro");
         SceneManager.LoadScene(nuevaEscena); // Cambiar a la nueva escena
     }
 }

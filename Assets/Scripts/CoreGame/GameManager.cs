@@ -24,18 +24,22 @@ public class GameManager : MonoBehaviour
 
     public void GameWin()
     {
-        AudioManager.Instance.PlaySfx("Victory");
-        SceneManager.LoadScene("GameWin");
+        if (AudioManager.Instance != null) AudioManager.Instance.PlaySfx("Victory");
+        LoadScene("GameWin");
     }
 
 
     public void GameOver()
     {
-        SceneManager.LoadScene("GameOver");
+        LoadScene("GameOver");
     }
 
     public void LoadScene(string name)
     {
+        // Evita cargar una escena congelada (pausa / rueda de armas) o con el cursor bloqueado
+        Time.timeScale = 1f;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
         SceneManager.LoadScene(name);
     }
 }

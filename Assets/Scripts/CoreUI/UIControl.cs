@@ -13,47 +13,40 @@ public class UIControl : MonoBehaviour
     [SerializeField] Slider sfxSlider;
     [SerializeField] Toggle muteToggle;
 
+    // Solo bloqueamos el cursor en escenas de juego (con jugador). En GameOver / GameWin debe quedar libre para usar los botones
+    bool IsGameplayScene => GameObject.FindWithTag("Player") != null;
+
     void Start()
     {
-        pausePanel.SetActive(false);
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        Time.timeScale = 1;
+        if (pausePanel != null) pausePanel.SetActive(false);
+        ApplyCursorState(false);
 
         // Cargar mute si está guardado
-        if (PlayerPrefs.HasKey("Muted"))
+        if (PlayerPrefs.HasKey("Muted") && muteToggle != null)
         {
             muteToggle.isOn = PlayerPrefs.GetInt("Muted") == 1;
             SetMute();
         }
 
-        // Cargar valores de volumen guardados
-        if (PlayerPrefs.HasKey("musicVolume"))
-        {
-            musicSlider.value = PlayerPrefs.GetFloat("musicVolume");
-        }
-        else
-        {
-            musicSlider.value = 1f; // Valor por defecto
-        }
-
-        if (PlayerPrefs.HasKey("sfxVolume"))
-        {
-            sfxSlider.value = PlayerPrefs.GetFloat("sfxVolume");
-        }
-        else
-        {
-            sfxSlider.value = 1f; // Valor por defecto
-        }
-
-        Debug.Log("Volumen inicial - Música: " + musicSlider.value + ", SFX: " + sfxSlider.value);
+        // Cargar valores de volumen guardados (valor por defecto 1)
+        if (musicSlider != null) musicSlider.value = PlayerPrefs.GetFloat("musicVolume", 1f);
+        if (sfxSlider != null) sfxSlider.value = PlayerPrefs.GetFloat("sfxVolume", 1f);
 
         SetMusicVolume();
         SetSfxVolume();
     }
 
+    void ApplyCursorState(bool paused)
+    {
+        bool lockCursor = !paused && IsGameplayScene;
+        Cursor.lockState = lockCursor ? CursorLockMode.Locked : CursorLockMode.None;
+        Cursor.visible = !lockCursor;
+    }
+
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) && pausePanel != null)
         {
             TogglePause();
         }
@@ -71,46 +64,40 @@ public class UIControl : MonoBehaviour
     public void TogglePause()
     {
         isPaused = !isPaused;
-        pausePanel.SetActive(isPaused);
+        if (pausePanel != null) pausePanel.SetActive(isPaused);
 
-        if (isPaused)
-        {
-            Time.timeScale = 0;
-        }
-        else
-        {
-            Time.timeScale = 1;
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-        }
+        Time.timeScale = isPaused ? 0 : 1;
+        ApplyCursorState(isPaused);
     }
 
     public void LoadScene(string name)
     {
         Time.timeScale = 1;
+        isPaused = false;
         SceneManager.LoadScene(name);
     }
 
     public void SetMusicVolume()
     {
+        if (musicSlider == null || audioMixer == null) return;
         float musicVolume = musicSlider.value;
-        audioMixer.SetFloat("Music", MathF.Log10(musicVolume) * 20);
+        audioMixer.SetFloat("Music", MathF.Log10(MathF.Max(musicVolume, 0.0001f)) * 20); // Log10(0) = -infinito
         PlayerPrefs.SetFloat("musicVolume", musicVolume);
         PlayerPrefs.Save();
-        Debug.Log("Música guardada: " + musicVolume);
     }
 
     public void SetSfxVolume()
     {
+        if (sfxSlider == null || audioMixer == null) return;
         float sfxVolume = sfxSlider.value;
-        audioMixer.SetFloat("sfx", MathF.Log10(sfxVolume) * 20);
+        audioMixer.SetFloat("sfx", MathF.Log10(MathF.Max(sfxVolume, 0.0001f)) * 20);
         PlayerPrefs.SetFloat("sfxVolume", sfxVolume);
         PlayerPrefs.Save();
-        Debug.Log("SFX guardado: " + sfxVolume);
     }
 
     public void SetMute()
     {
+        if (muteToggle == null || audioMixer == null) return;
         if (muteToggle.isOn)
         {
             audioMixer.SetFloat("Music", -80f);
@@ -128,6 +115,6 @@ public class UIControl : MonoBehaviour
 
     public void PlaySound()
     {
-        AudioManager.Instance.PlaySfx("button");
+        if (AudioManager.Instance != null) AudioManager.Instance.PlaySfx("button");
     }
 }

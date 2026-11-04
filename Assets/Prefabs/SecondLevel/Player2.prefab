@@ -2349,6 +2349,9 @@ GameObject:
   - component: {fileID: 89636774278902650}
   - component: {fileID: 714072461668019636}
   - component: {fileID: 3418730199483849975}
+  - component: {fileID: 7401000000000000001}
+  - component: {fileID: 7401000000000000002}
+  - component: {fileID: 7401000000000000003}
   m_Layer: 0
   m_Name: Player2
   m_TagString: Player
@@ -3260,3 +3263,57 @@ Transform:
   m_Children: []
   m_Father: {fileID: 523428096436746734}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7401000000000000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6553750720740855738}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a1d82ca427eeda468dca454cba621c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 500
+  currentHealth: 500
+  hasHit: 0
+  healthSlider: {fileID: 0}
+  onDeath:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &7401000000000000002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6553750720740855738}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8673dd91463805e42be81b8ff7523d75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  poolSize: 10
+  bulletPrefab: {fileID: 5835554412348615571, guid: fde19dc010d1376438b2efb9c07379fe, type: 3}
+--- !u!114 &7401000000000000003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6553750720740855738}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a54cabd666c441f8c753eeee359068b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  duckPool: {fileID: 7401000000000000002}
+  fireCooldown: 0.35
+  spawnForwardOffset: 0.6
+  spawnHeight: 1
+  meleeCooldown: 0.8
+  meleeRange: 2.2
+  meleeDamage: 80
+  parryWindow: 0.35
+  parryRadius: 2

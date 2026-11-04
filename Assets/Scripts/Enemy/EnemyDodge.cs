@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class EnemyDodge : EnemyBase
 {
@@ -24,23 +24,19 @@ public class EnemyDodge : EnemyBase
     {
         if (Time.time < lastDodgeTime + dodgeCooldown || isDodging) return;
 
-        Debug.Log("👀 Buscando amenazas cercanas...");
 
         Collider[] threats = Physics.OverlapSphere(transform.position, threatDetectionRadius, threatLayer);
 
         if (threats.Length == 0)
         {
-            Debug.Log("❌ No hay amenazas en el radio.");
             return;
         }
 
         foreach (Collider threat in threats)
         {
-            Debug.Log("🟠 Detectado: " + threat.name);
 
             if (!threat.CompareTag("bulletDuck") && !threat.CompareTag("Canon") && !threat.CompareTag("Sword"))
             {
-                Debug.Log("⚠️ Objeto detectado no tiene un tag de amenaza: " + threat.tag);
                 continue;
             }
 
@@ -51,22 +47,18 @@ public class EnemyDodge : EnemyBase
                 Vector3 threatDir = threatRb.linearVelocity.normalized;
 
                 float angle = Vector3.Angle(threatDir, toEnemy);
-                Debug.Log($"📐 Ángulo de amenaza: {angle}");
 
                 if (angle <= threatDetectionAngle)
                 {
-                    Debug.Log("✅ Amenaza válida detectada. Ejecutando dodge.");
                     Dodge();
                     break;
                 }
                 else
                 {
-                    Debug.Log("🔵 La amenaza no viene hacia el enemigo. Ángulo muy amplio.");
                 }
             }
             else
             {
-                Debug.Log("⚠️ Amenaza sin Rigidbody, igual esquivamos.");
                 Dodge();
                 break;
             }

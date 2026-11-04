@@ -18,6 +18,7 @@ public class AudioManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            SceneManager.sceneLoaded += OnSceneLoaded;
         }
         else
         {
@@ -26,24 +27,44 @@ public class AudioManager : MonoBehaviour
 
     }
 
+    private void OnDestroy()
+    {
+        if (Instance == this)
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
     private void Start()
     {
-        float volume = PlayerPrefs.GetFloat("musicVolume", 1f);
-        mixer.SetFloat("Music", Mathf.Log10(volume) * 20);
-        mixer.SetFloat("sfx", Mathf.Log10(volume) * 20);
+        if (mixer != null)
+        {
+            float musicVolume = Mathf.Max(PlayerPrefs.GetFloat("musicVolume", 1f), 0.0001f);
+            float sfxVolume = Mathf.Max(PlayerPrefs.GetFloat("sfxVolume", 1f), 0.0001f);
+            mixer.SetFloat("Music", Mathf.Log10(musicVolume) * 20);
+            mixer.SetFloat("sfx", Mathf.Log10(sfxVolume) * 20);
+        }
 
-        string currentScene = SceneManager.GetActiveScene().name;
+        PlaySceneMusic(SceneManager.GetActiveScene().name);
+    }
 
+    // El AudioManager persiste entre escenas: cambia la música cada vez que se carga una escena
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (mode == LoadSceneMode.Single)
+            PlaySceneMusic(scene.name);
+    }
+
+    private void PlaySceneMusic(string currentScene)
+    {
         switch (currentScene)
         {
             case "cinematic 1":
-                PlayMusic("MenuMusic");
+                PlayMusic("Cinema1");
                 break;
             case "cinematic 2":
-                PlayMusic("Level1Music");
+                PlayMusic("Cinema2");
                 break;
             case "cinematic 3":
-                PlayMusic("BossMusic");
+                PlayMusic("Cinema3");
                 break;
             case "GameWin":
                 PlayMusic("victory");
@@ -55,8 +76,6 @@ public class AudioManager : MonoBehaviour
                 PlayMusic("BGMusic");
                 break;
         }
-
-        PlayMusic("BGMusic");
     }
 
     public void PlayMusic(String name)
@@ -64,7 +83,8 @@ public class AudioManager : MonoBehaviour
         Sounds s = Array.Find(musicSound, x => x.name == name);
         if (s == null)
         {
-            Debug.Log("musica no encontrado");
+            Debug.Log("musica no encontrado: " + name);
+            return;
         }
 
         if (musicSource.clip == s.clip && musicSource.isPlaying)
@@ -83,13 +103,13 @@ public class AudioManager : MonoBehaviour
         Sounds s = Array.Find(SfxSound, x => x.name == name);
         if (s == null)
         {
-            Debug.Log("sfx no encontrado");
+            Debug.Log("sfx no encontrado: " + name);
         }
 
         else
         {
             sfxSource.clip = s.clip;
-            musicSource.mute = false;
+            sfxSource.mute = false;
             sfxSource.Play();
         }
     }

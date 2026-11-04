@@ -7,13 +7,15 @@ public class FollowPlayerCam : MonoBehaviour
     void Start()
     {
         //Buscamos el componente transform por medio del Tag Player usando el método FindWithTag
-        playerTransform = GameObject.FindWithTag("Player").transform; 
+        GameObject playerObj = GameObject.FindWithTag("Player");
+        if (playerObj != null) playerTransform = playerObj.transform;
     }
 
     
     void LateUpdate()
     {
         //Copia las coordenadas del jugador + unos valores adicionales que permiten posicionarla mejor (offset)
+        if (playerTransform == null) return;
         transform.position = playerTransform.position + offset;
         //2D
         //transform.position = new Vector3(playerTransform.position.x, playerTransform.position.y, transform.position.z);
